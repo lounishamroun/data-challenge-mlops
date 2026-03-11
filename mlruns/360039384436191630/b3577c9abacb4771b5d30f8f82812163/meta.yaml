@@ -1,0 +1,16 @@
+artifact_uri: file:///home/leo/Data_Challenge_MLOps/data-challenge-mlops/mlruns/360039384436191630/b3577c9abacb4771b5d30f8f82812163/artifacts
+deleted_time: 1773226323136
+end_time: 1773226262806
+entry_point_name: ''
+experiment_id: '360039384436191630'
+lifecycle_stage: deleted
+run_id: b3577c9abacb4771b5d30f8f82812163
+run_name: kmeans_k2_20260311_115059
+run_uuid: b3577c9abacb4771b5d30f8f82812163
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1773226259258
+status: 3
+tags: []
+user_id: leo

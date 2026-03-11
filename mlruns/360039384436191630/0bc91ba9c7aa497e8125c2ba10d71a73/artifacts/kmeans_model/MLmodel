@@ -1,0 +1,36 @@
+artifact_path: kmeans_model
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.8
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+is_signature_from_type_hint: false
+mlflow_version: 2.22.4
+model_size_bytes: 3483
+model_uuid: d35d058bde284f57b77e4a5bf3a6628c
+prompts: null
+run_id: 0bc91ba9c7aa497e8125c2ba10d71a73
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "Fresh", "required": true}, {"type": "double",
+    "name": "Milk", "required": true}, {"type": "double", "name": "Grocery", "required":
+    true}, {"type": "double", "name": "Frozen", "required": true}, {"type": "double",
+    "name": "Detergents_Paper", "required": true}, {"type": "double", "name": "Delicassen",
+    "required": true}, {"type": "double", "name": "Channel", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "int32", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2026-03-11 10:51:21.260448'
