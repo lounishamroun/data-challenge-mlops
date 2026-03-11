@@ -22,6 +22,22 @@ def load_data(url: str) -> pd.DataFrame:
     return pd.read_csv(url)
 
 
+def prepare_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Encode les variables catégorielles et assemble les features.
+
+    Args:
+        df: DataFrame brut.
+
+    Returns:
+        DataFrame avec colonnes numériques + catégorielles encodées.
+    """
+    df_out = df[NUMERIC_COLS].copy()
+    # Encodage binaire de Channel : Channel_2 = 1 si Channel == 2, sinon 0
+    df_out["Channel_2"] = (df["Channel"] == 2).astype(float)
+    return df_out
+
+
 def preprocess(df: pd.DataFrame) -> tuple[pd.DataFrame, StandardScaler]:
     """
     Prétraite les données pour l'entraînement du modèle K-Means: encodage des variables catégorielles et normalisation des colonnes numériques.
@@ -32,14 +48,7 @@ def preprocess(df: pd.DataFrame) -> tuple[pd.DataFrame, StandardScaler]:
     Returns:
         (df_scaled, scaler) — DataFrame scalé + scaler fité (pour réutilisation).
     """
-
-    # Encodage de Channel (variable catégorielle)
-    df_encoded = pd.get_dummies(df[CATEGORICAL_COLS], drop_first=True).astype(float)  # drop_first pour éviter la colinéarité
-
-    # Concaténation avec les colonnes numériques
-    df_features = pd.concat([df[NUMERIC_COLS], df_encoded], axis=1)
-
-    # Normalisation
+    df_features = prepare_features(df)
     scaler = StandardScaler()
     scaled = scaler.fit_transform(df_features)
     df_scaled = pd.DataFrame(scaled, columns=df_features.columns)

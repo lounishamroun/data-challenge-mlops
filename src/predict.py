@@ -9,22 +9,37 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from src.data import NUMERIC_COLS, CATEGORICAL_COLS
+from src.data import prepare_features
 from src.train import MLFLOW_EXPERIMENT
 
 
 def load_model(run_id: str | None = None, experiment_name: str = MLFLOW_EXPERIMENT):
     """
-    Charge le dernier modèle K-Means et le scaler depuis MLflow.
+    Charge le modèle K-Means et le scaler depuis MLflow.
 
-    Args:
-        run_id: ID du run MLflow. Si None, prend le dernier run.
-        experiment_name: Nom de l'expérience MLflow.
+    Priorité :
+      1. run_id explicite
+      2. Dernière version du Model Registry (wholesale_kmeans_best)
+      3. Dernier run de l'expérience
 
     Returns:
         Tuple (model, scaler, run_id).
     """
     if run_id is None:
+        # Tente de charger depuis le Model Registry (meilleur modèle sélectionné par le DAG)
+        try:
+            model = mlflow.sklearn.load_model("models:/wholesale_kmeans_best/latest")
+            # Récupérer le run_id depuis le registry
+            client = mlflow.MlflowClient()
+            versions = client.get_latest_versions("wholesale_kmeans_best")
+            run_id = versions[0].run_id
+            scaler_path = mlflow.artifacts.download_artifacts(f"runs:/{run_id}/scaler.joblib")
+            scaler = joblib.load(scaler_path)
+            return model, scaler, run_id
+        except Exception:
+            pass
+
+        # Fallback : dernier run de l'expérience
         experiment = mlflow.get_experiment_by_name(experiment_name)
         if experiment is None:
             raise ValueError(f"Expérience '{experiment_name}' introuvable. Lancez d'abord train.py.")
@@ -56,7 +71,6 @@ def predict(model, scaler, features: dict[str, float]) -> int:
         Cluster prédit (int).
     """
     df = pd.DataFrame([features])
-    df_encoded = pd.get_dummies(df[CATEGORICAL_COLS], drop_first=True).astype(float)
-    df_final = pd.concat([df[NUMERIC_COLS], df_encoded], axis=1)
-    df_scaled = pd.DataFrame(scaler.transform(df_final), columns=df_final.columns)
+    df_features = prepare_features(df)
+    df_scaled = pd.DataFrame(scaler.transform(df_features), columns=df_features.columns)
     return int(model.predict(df_scaled)[0])
