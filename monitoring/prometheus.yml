@@ -1,0 +1,14 @@
+# Configuration Prometheus — scrape des métriques de l'API FastAPI
+
+global:
+  scrape_interval: 15s        # fréquence de collecte
+  evaluation_interval: 15s    # fréquence d'évaluation des règles
+
+scrape_configs:
+  # Métriques de l'API de prédiction
+  - job_name: "fastapi"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["api:8000"]
+        labels:
+          service: "wholesale-api"

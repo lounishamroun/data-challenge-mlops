@@ -44,6 +44,9 @@ dependencies = [
     # --- Utils ---
     "python-dotenv>=1.0.0",
 
+    # --- Monitoring ---
+    "prometheus-fastapi-instrumentator>=7.0.0",
+
     # --- Tests ---
     "pytest>=8.0.0",
 ]

@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from src.predict import load_model, predict
 
@@ -29,6 +30,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Wholesale Clustering API", lifespan=lifespan)
+
+# Métriques Prometheus exposées sur /metrics (non-intrusif)
+Instrumentator().instrument(app).expose(app)
 
 
 class CustomerFeatures(BaseModel):

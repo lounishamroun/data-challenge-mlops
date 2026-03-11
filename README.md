@@ -31,11 +31,23 @@ Pipeline MLOps complète pour la segmentation de clients grossistes par K-Means 
   │   MinIO (S3)  │      │  src/predict  │
   │   artifacts   │      │  load_model() │
   └──────────────┘      └──────────────┘
+
+          ┌──────────────────────────────────────────┐
+          │          Monitoring (Prometheus)          │
+          │   scrape /metrics ← FastAPI (15s)        │
+          └────────────────┬─────────────────────────┘
+                           │
+                  ┌────────▼────────┐
+                  │     Grafana      │
+                  │  dashboards :    │
+                  │  latence, RPS,   │
+                  │  erreurs 5xx     │
+                  └─────────────────┘
 ```
 
 | Environnement | Composants |
 |---|---|
-| **Dev** (Docker Compose) | MinIO · Airflow · FastAPI · Gradio · JupyterLab |
+| **Dev** (Docker Compose) | MinIO · Airflow · FastAPI · Gradio · Prometheus · Grafana |
 | **Prod** (Kubernetes) | FastAPI (ClusterIP) · Gradio (NodePort :30860) |
 
 ---
@@ -72,6 +84,8 @@ docker compose up --build
 | Airflow | http://localhost:8081 |
 | FastAPI (Swagger) | http://localhost:8000/docs |
 | WebApp (Gradio) | http://localhost:7860 |
+| Prometheus | http://localhost:9090 |
+| Grafana | http://localhost:3000 (admin / admin) |
 
 ---
 
@@ -192,6 +206,32 @@ Quatre jobs parallèles sur chaque push (`main`, `feat/**`) :
 
 ---
 
+## Monitoring (Prometheus + Grafana)
+
+L'API expose automatiquement un endpoint `/metrics` (via `prometheus-fastapi-instrumentator`).
+Prometheus scrape ces métriques toutes les 15 secondes, et Grafana fournit un dashboard pré-configuré.
+
+| Métrique | Description |
+|---|---|
+| `http_requests_total` | Nombre total de requêtes par endpoint, méthode et status |
+| `http_request_duration_seconds` | Histogramme de latence par endpoint |
+| `http_request_size_bytes` | Taille des requêtes entrantes |
+| `http_response_size_bytes` | Taille des réponses sortantes |
+
+**Dashboard Grafana** (chargé automatiquement au démarrage) :
+- Requêtes par seconde (par endpoint)
+- Latence p95
+- Total requêtes / requêtes par endpoint / latence moyenne
+- Taux d'erreurs 5xx
+- Distribution de latence `/predict`
+
+```bash
+# Générer du trafic pour tester les graphes
+for i in $(seq 1 100); do curl -s http://localhost:8000/health > /dev/null; done
+```
+
+---
+
 ## Structure du projet
 
 ```
@@ -211,6 +251,12 @@ Quatre jobs parallèles sur chaque push (`main`, `feat/**`) :
 │   └── visualisation_clustering.ipynb
 ├── tests/                   # 34 tests (pytest)
 ├── k8s/                     # Manifestes Kubernetes (namespace, deployments, services, secrets)
+├── monitoring/
+│   ├── prometheus.yml       # Configuration scrape Prometheus
+│   └── grafana/
+│       ├── provisioning/    # Datasource + dashboard provider (auto-chargés)
+│       └── dashboards/
+│           └── api-monitoring.json  # Dashboard pré-configuré
 ├── .github/workflows/
 │   └── ci.yml               # CI : lint, test, k8s validate, docker build
 ├── docker-compose.yml       # Stack dev : MinIO, Airflow, API, WebApp
