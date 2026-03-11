@@ -16,7 +16,11 @@ _run_id = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global _model, _scaler, _run_id
-    _model, _scaler, _run_id = load_model()
+    try:
+        _model, _scaler, _run_id = load_model()
+    except Exception as e:
+        print(f"[WARNING] Could not load model at startup: {e}")
+        print("[WARNING] API started without a model. Train a model first.")
     yield
 
 
