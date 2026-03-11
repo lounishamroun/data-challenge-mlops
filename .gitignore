@@ -40,3 +40,7 @@ __pycache__/
 *.pyo
 *.pyd
 *.log
+# MLflow local runs & artifacts
+mlruns/
+scaler.joblib
+*.joblib

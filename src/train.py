@@ -55,7 +55,7 @@ def train(n_clusters: int = DEFAULT_K) -> None:
 
         # Artefacts : modèle + scaler
         signature = infer_signature(df_scaled, labels)
-        mlflow.sklearn.log_model(model, "kmeans_model", signature=signature, input_example=df_scaled.head(1))
+        mlflow.sklearn.log_model(model, artifact_path="kmeans_model", signature=signature, input_example=df_scaled.head(1))
         joblib.dump(scaler, "scaler.joblib")
         mlflow.log_artifact("scaler.joblib")
 
