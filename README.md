@@ -13,7 +13,7 @@ Pipeline MLOps complète pour la segmentation de clients grossistes par K-Means 
 ```
                     ┌───────────────────────────────┐
                     │  MLflow (mlflow.becaert.com)   │
-                    │  tracking + model registry     │
+                    │  suivi + registre de modèles   │
                     └────────────┬──────────────────┘
                                  │
           ┌──────────────────────┼──────────────────────┐
@@ -116,7 +116,7 @@ Chaque run MLflow enregistre :
 
 | Méthode | Endpoint | Description |
 |---|---|---|
-| `GET` | `/health` | Health check + statut du modèle |
+| `GET` | `/health` | Vérification de l'état + statut du modèle |
 | `GET` | `/model-info` | Run ID, expérience, nombre de clusters |
 | `POST` | `/predict` | Retourne le cluster d'un client |
 
