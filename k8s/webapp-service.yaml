@@ -1,0 +1,14 @@
+# NodePort: exposes the WebApp on http://localhost:30860 (or <minikube-ip>:30860)
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-service
+  namespace: wholesale-mlops
+spec:
+  selector:
+    app: webapp
+  ports:
+    - port: 7860
+      targetPort: 7860
+      nodePort: 30860
+  type: NodePort
