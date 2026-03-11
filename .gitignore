@@ -34,3 +34,9 @@ models/*.joblib
 # Airflow
 airflow_dev/logs/
 airflow_dev/airflow.db
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+*.pyo
+*.pyd
+*.log
