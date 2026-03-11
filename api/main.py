@@ -38,14 +38,20 @@ def health():
     return {"status": "ok", "model_loaded": _model is not None}
 
 
-@app.get("/model")
+@app.get("/model-info")
 def get_model_info():
-    return {"run_id": _run_id, "experiment": "wholesale_segmentation"}
+    if _model is None:
+        raise HTTPException(status_code=503, detail="No model loaded")
+    return {
+        "run_id": _run_id,
+        "experiment": "wholesale_segmentation",
+        "n_clusters": int(_model.n_clusters),
+    }
 
 
 @app.post("/predict")
 def predict_cluster(customer: CustomerFeatures):
     if _model is None:
-        raise HTTPException(status_code=503, detail="Modèle non chargé")
+        raise HTTPException(status_code=503, detail="No model loaded. Train a model first.")
     cluster = predict(_model, _scaler, customer.model_dump())
-    return {"cluster": cluster}
+    return {"cluster": int(cluster)}
