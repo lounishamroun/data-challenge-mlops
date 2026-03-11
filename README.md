@@ -22,20 +22,8 @@ cp .env .env.local  # puis éditer les valeurs
 uv pip install -e ".[dev]"
 ```
 
-Contenu minimal du `.env` :
-```env
-MINIO_ROOT_USER=minioadmin
-MINIO_ROOT_PASSWORD=minioadmin
-MINIO_BUCKET=mlflow-artifacts
-AWS_ACCESS_KEY_ID=minioadmin
-AWS_SECRET_ACCESS_KEY=minioadmin
-MLFLOW_S3_ENDPOINT_URL=http://minio:9000
-MLFLOW_TRACKING_URI=https://mlflow.becaert.com
-MLFLOW_DEFAULT_ARTIFACT_ROOT=s3://mlflow-artifacts/
-API_HOST=0.0.0.0
-API_PORT=8000
-API_URL=http://api:8000
-```
+Le `.env` contient les credentials MinIO, l'URI MLflow et la config API.  
+Récupère les valeurs auprès de l'équipe et remplis les champs `à_modifier`.
 
 ## Lancer l'environnement dev (Docker Compose)
 
