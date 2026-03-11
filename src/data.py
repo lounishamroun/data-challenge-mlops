@@ -44,4 +44,3 @@ def preprocess(df: pd.DataFrame) -> tuple[pd.DataFrame, StandardScaler]:
     scaled = scaler.fit_transform(df_features)
     df_scaled = pd.DataFrame(scaled, columns=df_features.columns)
     return df_scaled, scaler
-    return df_scaled, scaler
