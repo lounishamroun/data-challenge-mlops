@@ -1,9 +1,8 @@
+import os
 import gradio as gr
 import requests
 
-# L'URL de l'API FastAPI (elle tournera sur le port 8000 en local)
-#API_URL = "http://127.0.0.1:8000/predict"
-API_URL = "http://api:8000/predict"
+API_URL = os.getenv("API_URL", "http://127.0.0.1:8000/predict")
 
 def predict_segment(fresh, milk, grocery, frozen, detergents, delicassen):
     payload = {
