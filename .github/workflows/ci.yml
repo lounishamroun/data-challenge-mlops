@@ -53,7 +53,7 @@ jobs:
           MLFLOW_TRACKING_URI: ""        # tests use tmp paths, no real MLflow needed
           AWS_ACCESS_KEY_ID: "dummy"
           AWS_SECRET_ACCESS_KEY: "dummy"
-        run: pytest tests/ -v --disable-warnings
+        run: pytest tests/ -v --disable-warnings --cov=src --cov=api --cov-report=term-missing
 
   # ─────────────────────────────────────────────
   # Job 3 — Kubernetes manifest validation
