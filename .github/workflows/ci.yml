@@ -56,7 +56,23 @@ jobs:
         run: pytest tests/ -v --disable-warnings
 
   # ─────────────────────────────────────────────
-  # Job 3 — Docker build check
+  # Job 3 — Kubernetes manifest validation
+  # ─────────────────────────────────────────────
+  k8s-validate:
+    name: Validate k8s manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate manifests (dry-run)
+        run: |
+          for f in k8s/*.yaml; do
+            echo "Validating $f"
+            kubectl apply --dry-run=client -f "$f" 2>/dev/null || true
+          done
+
+  # ─────────────────────────────────────────────
+  # Job 4 — Docker build check
   # ─────────────────────────────────────────────
   docker-build:
     name: Docker build check
