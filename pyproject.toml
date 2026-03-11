@@ -50,7 +50,8 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     # --- Tests & CI/CD ---
-        "httpx>=0.27.0",
+    "httpx>=0.27.0",
+    "ruff>=0.4.0",
 ]
 
 [tool.pytest.ini_options]
