@@ -1,6 +1,5 @@
 import os
 import io
-import base64
 
 import gradio as gr
 import matplotlib

@@ -9,8 +9,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from src.data import prepare_features
-from src.train import MLFLOW_EXPERIMENT
+from src.data import prepare_features  # noqa: E402
+from src.train import MLFLOW_EXPERIMENT  # noqa: E402
 
 
 def load_model(run_id: str | None = None, experiment_name: str = MLFLOW_EXPERIMENT):

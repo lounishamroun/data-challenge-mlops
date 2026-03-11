@@ -4,10 +4,8 @@ Tests unitaires sur le modèle K-Means — comportement, métriques, cohérence.
 
 import numpy as np
 import pandas as pd
-import pytest
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
-from sklearn.preprocessing import StandardScaler
 
 from src.data import preprocess, prepare_features
 

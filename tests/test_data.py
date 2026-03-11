@@ -3,7 +3,6 @@ Tests unitaires pour src/data.py — chargement et prétraitement des données.
 """
 
 import pandas as pd
-import numpy as np
 from sklearn.preprocessing import StandardScaler
 
 from src.data import load_data, preprocess, NUMERIC_COLS, CATEGORICAL_COLS

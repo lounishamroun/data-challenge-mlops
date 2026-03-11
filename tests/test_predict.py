@@ -10,7 +10,6 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
 from src.predict import load_model, predict
-from src.data import NUMERIC_COLS, CATEGORICAL_COLS
 
 
 def _make_fake_model_and_scaler():

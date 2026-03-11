@@ -14,7 +14,7 @@ from mlflow.models import infer_signature
 
 load_dotenv()
 
-from src.data import load_data, preprocess
+from src.data import load_data, preprocess  # noqa: E402
 
 # Valeurs par défaut
 DATA_URL = "https://archive.ics.uci.edu/ml/machine-learning-databases/00292/Wholesale%20customers%20data.csv"

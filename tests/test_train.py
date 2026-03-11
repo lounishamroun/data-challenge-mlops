@@ -4,7 +4,7 @@ Tests unitaires pour src/train.py — entraînement K-Means avec MLflow.
 
 import mlflow
 import pandas as pd
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from src.train import train, DEFAULT_K, MLFLOW_EXPERIMENT
 
