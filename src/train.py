@@ -8,9 +8,12 @@ from datetime import datetime
 import joblib
 import mlflow
 import pandas as pd
+from dotenv import load_dotenv
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from mlflow.models import infer_signature
+
+load_dotenv()
 
 from src.data import load_data, preprocess, NUMERIC_COLS
 
