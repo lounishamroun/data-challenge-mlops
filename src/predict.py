@@ -71,12 +71,6 @@ def predict(model, scaler, features: dict[str, float]) -> int:
         Cluster prédit (int).
     """
     df = pd.DataFrame([features])
-<<<<<<< HEAD
     df_features = prepare_features(df)
     df_scaled = pd.DataFrame(scaler.transform(df_features), columns=df_features.columns)
-=======
-    df_encoded = pd.get_dummies(df[CATEGORICAL_COLS], drop_first=True).astype(float)
-    df_final = pd.concat([df[NUMERIC_COLS], df_encoded], axis=1)
-    df_scaled = pd.DataFrame(scaler.transform(df_final), columns=df_final.columns)
->>>>>>> ea808f8 (fix: remove predict.py from feat/kube (managed by colleague))
     return int(model.predict(df_scaled)[0])
