@@ -5,7 +5,7 @@ __pycache__/
 dist/
 build/
 *.egg
-
+*.pdf
 # Virtual env
 .venv/
 
@@ -40,3 +40,7 @@ __pycache__/
 *.pyo
 *.pyd
 *.log
+# MLflow local runs & artifacts
+mlruns/
+scaler.joblib
+*.joblib

@@ -26,8 +26,7 @@ dependencies = [
     "seaborn>=0.13.0",
     "scipy>=1.11.0",
     # --- API (Serving) ---
-    "fastapi[standard]>=0.135.1",
-    "swagger-ui>=0.1.2",
+    "fastapi>=0.100.0",
     "uvicorn[standard]>=0.23.0",
     "pydantic>=2.0.0",
     "python-multipart>=0.0.6",
@@ -57,9 +56,6 @@ dev = [
 [tool.pytest.ini_options]
 addopts = "-v --disable-warnings"
 testpaths = ["tests"]
-
-[tool.poetry]
-package-mode = false
 
 [tool.hatch.build.targets.wheel]
 packages = ["src", "api", "webapp"]
