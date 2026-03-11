@@ -2,16 +2,17 @@ import os
 import gradio as gr
 import requests
 
-API_URL = os.getenv("API_URL", "http://127.0.0.1:8000/predict")
+API_URL = os.getenv("API_URL", "http://api:8000") + "/predict"
 
-def predict_segment(fresh, milk, grocery, frozen, detergents, delicassen):
+def predict_segment(fresh, milk, grocery, frozen, detergents, delicassen, channel):
     payload = {
         "Fresh": fresh,
         "Milk": milk,
         "Grocery": grocery,
         "Frozen": frozen,
         "Detergents_Paper": detergents,
-        "Delicassen": delicassen
+        "Delicassen": delicassen,
+        "Channel": channel
     }
     try:
         response = requests.post(API_URL, json=payload)
@@ -21,7 +22,6 @@ def predict_segment(fresh, milk, grocery, frozen, detergents, delicassen):
     except Exception as e:
         return f"Erreur lors de la prédiction : {e}"
 
-# Création de l'interface simple et épurée
 interface = gr.Interface(
     fn=predict_segment,
     inputs=[
@@ -30,7 +30,8 @@ interface = gr.Interface(
         gr.Slider(0, 100000, label="Dépenses Épicerie"),
         gr.Slider(0, 100000, label="Dépenses Surgelés"),
         gr.Slider(0, 100000, label="Dépenses Détergents/Papier"),
-        gr.Slider(0, 100000, label="Dépenses Épicerie fine")
+        gr.Slider(0, 100000, label="Dépenses Épicerie fine"),
+        gr.Radio([1, 2], label="Canal (1=Horeca, 2=Retail)", value=1)
     ],
     outputs=gr.Text(label="Résultat de la segmentation"),
     title="Segmentation de Clients de Gros",
