@@ -1,6 +1,4 @@
-"""
-Tests unitaires sur le modèle K-Means — comportement, métriques, cohérence.
-"""
+"""Tests unitaires — comportement et cohérence du modèle K-Means."""
 
 import numpy as np
 import pandas as pd
@@ -76,7 +74,7 @@ class TestKMeansModel:
         df = _make_sample_df(20)
         df_scaled, scaler = preprocess(df)
         assert df_scaled.shape[0] == len(df)
-        # 6 numeric + 1 encoded channel
+        # 6 colonnes numériques + 1 Channel encodé
         assert df_scaled.shape[1] == 7
 
     def test_prepare_features_channel_encoding(self):

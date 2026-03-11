@@ -1,6 +1,4 @@
-"""
-Tests unitaires pour src/predict.py — chargement modèle et prédiction.
-"""
+"""Tests unitaires — chargement du modèle et prédiction (src/predict.py)."""
 
 import numpy as np
 import pandas as pd
@@ -13,7 +11,7 @@ from src.predict import load_model, predict
 
 
 def _make_fake_model_and_scaler():
-    """Crée un modèle K-Means et un scaler fités sur des données synthétiques."""
+    """Crée un modèle K-Means et un scaler sur des données synthétiques."""
     rng = np.random.RandomState(42)
     X = rng.randn(20, 7)
     model = KMeans(n_clusters=3, n_init=5, random_state=42)

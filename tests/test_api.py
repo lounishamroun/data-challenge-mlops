@@ -1,6 +1,4 @@
-"""
-Tests d'intégration pour api/main.py — endpoints FastAPI.
-"""
+"""Tests d'intégration — endpoints FastAPI (api/main.py)."""
 
 import numpy as np
 import pytest
@@ -14,9 +12,9 @@ from api.main import app
 
 
 def _make_fake_model_and_scaler():
-    """K-Means + scaler fitted on 7-feature synthetic data (matches prepare_features output)."""
+    """Crée un K-Means et un scaler sur 7 features synthétiques."""
     rng = np.random.RandomState(42)
-    X = rng.randn(30, 7)  # 6 numeric cols + Channel_2
+    X = rng.randn(30, 7)  # 6 colonnes numériques + Channel_2
     model = KMeans(n_clusters=3, n_init=5, random_state=42)
     model.fit(X)
     scaler = StandardScaler()
@@ -35,38 +33,30 @@ _VALID_PAYLOAD = {
 }
 
 
-# ─────────────────────────────────────────────
-# Fixture: client WITHOUT a loaded model
-# ─────────────────────────────────────────────
+# ── Fixture : client SANS modèle chargé ────────────────────
 @pytest.fixture
 def client_no_model():
-    """TestClient with no model loaded (simulates cold start before training)."""
-    # Patch load_model to raise so lifespan sets globals to None gracefully,
-    # then directly reset the module-level globals to ensure no model is set.
+    """Client de test sans modèle (simule un démarrage à froid)."""
     with patch("api.main.load_model", side_effect=Exception("no model")):
         with TestClient(app) as c:
-            # Ensure module globals are None regardless of lifespan outcome
+            # Réinitialise les variables globales du module
             main_module._model = None
             main_module._scaler = None
             main_module._run_id = None
             yield c
 
 
-# ─────────────────────────────────────────────
-# Fixture: client WITH a loaded model
-# ─────────────────────────────────────────────
+# ── Fixture : client AVEC modèle chargé ────────────────────
 @pytest.fixture
 def client_with_model():
-    """TestClient with a fake K-Means model injected."""
+    """Client de test avec un modèle K-Means injecté."""
     model, scaler = _make_fake_model_and_scaler()
     with patch("api.main.load_model", return_value=(model, scaler, "fake-run-id")):
         with TestClient(app) as c:
             yield c
 
 
-# ─────────────────────────────────────────────
-# /health
-# ─────────────────────────────────────────────
+# ── /health ────────────────────────────────────────────────
 class TestHealth:
     def test_health_no_model(self, client_no_model):
         r = client_no_model.get("/health")
@@ -81,9 +71,7 @@ class TestHealth:
         assert r.json()["model_loaded"] is True
 
 
-# ─────────────────────────────────────────────
-# /model-info
-# ─────────────────────────────────────────────
+# ── /model-info ────────────────────────────────────────────
 class TestModelInfo:
     def test_model_info_no_model_returns_503(self, client_no_model):
         r = client_no_model.get("/model-info")
@@ -98,9 +86,7 @@ class TestModelInfo:
         assert data["n_clusters"] == 3
 
 
-# ─────────────────────────────────────────────
-# /predict
-# ─────────────────────────────────────────────
+# ── /predict ───────────────────────────────────────────────
 class TestPredict:
     def test_predict_no_model_returns_503(self, client_no_model):
         r = client_no_model.post("/predict", json=_VALID_PAYLOAD)

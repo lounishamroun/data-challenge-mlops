@@ -18,7 +18,7 @@ spec:
       containers:
         - name: api
           image: wholesale-clustering-api:latest
-          imagePullPolicy: Never          # local image (Minikube / Docker Desktop)
+          imagePullPolicy: Never          # image locale (Minikube / Docker Desktop)
           ports:
             - containerPort: 8000
           envFrom:

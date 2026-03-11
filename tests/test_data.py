@@ -1,6 +1,4 @@
-"""
-Tests unitaires pour src/data.py — chargement et prétraitement des données.
-"""
+"""Tests unitaires — chargement et prétraitement des données (src/data.py)."""
 
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
@@ -9,7 +7,7 @@ from src.data import load_data, preprocess, NUMERIC_COLS, CATEGORICAL_COLS
 
 
 def _make_sample_df() -> pd.DataFrame:
-    """Crée un DataFrame échantillon avec la même structure que le dataset réel."""
+    """Crée un DataFrame similaire au dataset réel."""
     return pd.DataFrame({
         "Channel": [1, 2, 1, 2],
         "Region": [3, 3, 3, 1],
@@ -61,14 +59,14 @@ class TestPreprocess:
         df = _make_sample_df()
         df_scaled, _ = preprocess(df)
 
-        # Channel (int) passe par get_dummies — doit être présent dans le résultat
+        # La colonne Channel doit être encodée (Channel_2)
         assert "Channel" in df_scaled.columns or "Channel_2" in df_scaled.columns
 
     def test_scaled_values_centered(self):
         df = _make_sample_df()
         df_scaled, _ = preprocess(df)
 
-        # Les colonnes scalées doivent avoir une moyenne proche de 0
+        # Après normalisation, la moyenne doit être ~0
         for col in NUMERIC_COLS:
             assert abs(df_scaled[col].mean()) < 1e-10
 

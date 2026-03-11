@@ -1,6 +1,4 @@
-"""
-Tests unitaires pour src/train.py — entraînement K-Means avec MLflow.
-"""
+"""Tests unitaires — entraînement K-Means et logging MLflow (src/train.py)."""
 
 import mlflow
 import pandas as pd
@@ -25,10 +23,10 @@ def _make_sample_df() -> pd.DataFrame:
 class TestTrain:
     @patch("src.train.load_data")
     def test_train_logs_to_mlflow(self, mock_load_data, tmp_path):
-        """Vérifie que train() crée un run MLflow avec les bonnes métriques."""
+        """Vérifie que train() crée un run MLflow avec les métriques attendues."""
         mock_load_data.return_value = _make_sample_df()
 
-        # Utiliser un tracking URI temporaire pour ne pas polluer
+        # URI temporaire pour isoler les tests
         mlflow.set_tracking_uri(f"file://{tmp_path / 'mlruns'}")
 
         train(n_clusters=2)
@@ -44,11 +42,11 @@ class TestTrain:
         assert last_run["params.n_clusters"] == "2"
         assert "metrics.inertia" in last_run.index
         assert "metrics.silhouette_score" in last_run.index
-        assert last_run["metrics.silhouette_score"] > -1  # silhouette ∈ [-1, 1]
+        assert last_run["metrics.silhouette_score"] > -1  # silhouette score ∈ [-1, 1]
 
     @patch("src.train.load_data")
     def test_train_different_k(self, mock_load_data, tmp_path):
-        """Vérifie que le paramètre n_clusters est bien utilisé."""
+        """Vérifie que le nombre de clusters passé en paramètre est bien utilisé."""
         mock_load_data.return_value = _make_sample_df()
         mlflow.set_tracking_uri(f"file://{tmp_path / 'mlruns'}")
 

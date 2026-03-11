@@ -1,6 +1,4 @@
-"""
-Chargement du modèle K-Means et du scaler depuis MLflow et prédiction de cluster.
-"""
+"""Chargement du modèle et prédiction de cluster."""
 
 import joblib
 import mlflow
@@ -14,22 +12,17 @@ from src.train import MLFLOW_EXPERIMENT  # noqa: E402
 
 
 def load_model(run_id: str | None = None, experiment_name: str = MLFLOW_EXPERIMENT):
-    """
-    Charge le modèle K-Means et le scaler depuis MLflow.
+    """Charge le modèle K-Means et le scaler depuis MLflow.
 
-    Priorité :
+    Ordre de priorité :
       1. run_id explicite
-      2. Dernière version du Model Registry (wholesale_kmeans_best)
+      2. Model Registry (wholesale_kmeans_best)
       3. Dernier run de l'expérience
-
-    Returns:
-        Tuple (model, scaler, run_id).
     """
     if run_id is None:
-        # Tente de charger depuis le Model Registry (meilleur modèle sélectionné par le DAG)
+        # Tentative via le Model Registry (meilleur modèle sélectionné par le DAG)
         try:
             model = mlflow.sklearn.load_model("models:/wholesale_kmeans_best/latest")
-            # Récupérer le run_id depuis le registry
             client = mlflow.MlflowClient()
             versions = client.get_latest_versions("wholesale_kmeans_best")
             run_id = versions[0].run_id
@@ -59,17 +52,7 @@ def load_model(run_id: str | None = None, experiment_name: str = MLFLOW_EXPERIME
 
 
 def predict(model, scaler, features: dict[str, float]) -> int:
-    """
-    Prédit le cluster pour un client donné.
-
-    Args:
-        model: Modèle K-Means chargé depuis MLflow.
-        scaler: StandardScaler fité lors de l'entraînement.
-        features: Dictionnaire avec les colonnes numériques + catégorielles.
-
-    Returns:
-        Cluster prédit (int).
-    """
+    """Prédit le cluster d'un client à partir de ses dépenses."""
     df = pd.DataFrame([features])
     df_features = prepare_features(df)
     df_scaled = pd.DataFrame(scaler.transform(df_features), columns=df_features.columns)

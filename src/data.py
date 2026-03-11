@@ -1,52 +1,31 @@
-"""
-Chargement et prétraitement du Wholesale Customers Dataset.
-"""
+"""Chargement et prétraitement du dataset Wholesale Customers."""
 
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-# Colonnes numériques utilisées pour la segmentation
+# Colonnes de dépenses utilisées pour le clustering
 NUMERIC_COLS = ["Fresh", "Milk", "Grocery", "Frozen", "Detergents_Paper", "Delicassen"]
+# Variable catégorielle (1 = Hôtellerie/Restauration, 2 = Retail)
 CATEGORICAL_COLS = ["Channel"]
 
+
 def load_data(url: str) -> pd.DataFrame:
-    """
-    Télécharge le dataset depuis l'URL UCI.
-
-    Args:
-        url: URL du dataset CSV.
-
-    Returns:         
-        DataFrame contenant les données brutes.
-    """
+    """Charge le dataset CSV depuis une URL ou un chemin local."""
     return pd.read_csv(url)
 
 
 def prepare_features(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Encode les variables catégorielles et assemble les features.
-
-    Args:
-        df: DataFrame brut.
-
-    Returns:
-        DataFrame avec colonnes numériques + catégorielles encodées.
-    """
+    """Prépare les features : colonnes numériques + encodage binaire de Channel."""
     df_out = df[NUMERIC_COLS].copy()
-    # Encodage binaire de Channel : Channel_2 = 1 si Channel == 2, sinon 0
+    # Channel_2 = 1 si retail (Channel == 2), sinon 0
     df_out["Channel_2"] = (df["Channel"] == 2).astype(float)
     return df_out
 
 
 def preprocess(df: pd.DataFrame) -> tuple[pd.DataFrame, StandardScaler]:
-    """
-    Prétraite les données pour l'entraînement du modèle K-Means: encodage des variables catégorielles et normalisation des colonnes numériques.
+    """Prétraite les données : encodage + normalisation (StandardScaler).
 
-    Args:
-        df: DataFrame brut chargé depuis le CSV.
-
-    Returns:
-        (df_scaled, scaler) — DataFrame scalé + scaler fité (pour réutilisation).
+    Retourne le DataFrame normalisé et le scaler fité.
     """
     df_features = prepare_features(df)
     scaler = StandardScaler()

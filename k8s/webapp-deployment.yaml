@@ -18,7 +18,7 @@ spec:
       containers:
         - name: webapp
           image: wholesale-clustering-webapp:latest
-          imagePullPolicy: Never          # local image (Minikube / Docker Desktop)
+          imagePullPolicy: Never          # image locale (Minikube / Docker Desktop)
           ports:
             - containerPort: 7860
           env:

@@ -1,4 +1,4 @@
-# NodePort: exposes the WebApp on http://localhost:30860 (or <minikube-ip>:30860)
+# NodePort : expose la WebApp sur http://localhost:30860 (ou <minikube-ip>:30860)
 apiVersion: v1
 kind: Service
 metadata:
