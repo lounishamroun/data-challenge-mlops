@@ -1,2 +1,4 @@
 data/processed/*
 data/raw/*
+.venv
+.env
