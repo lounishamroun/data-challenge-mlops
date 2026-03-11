@@ -8,6 +8,7 @@ build/
 *.pdf
 # Virtual env
 .venv/
+.env
 
 # IDE
 .vscode/
@@ -40,6 +41,7 @@ __pycache__/
 *.pyo
 *.pyd
 *.log
+
 # MLflow local runs & artifacts
 mlruns/
 scaler.joblib
